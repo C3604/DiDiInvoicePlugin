@@ -21,12 +21,15 @@ Module ValidationModule
                 Dim recipients As Recipients = selectedMail.Recipients
                 Dim authorized As Boolean = False
                 For Each recipient As Recipient In recipients
-                    Dim emailAddress As String = recipient.AddressEntry.GetExchangeUser().PrimarySmtpAddress
-                    ' 显示当前收件人的邮箱和 mail
-                    'MessageBox.Show($"当前收件人邮箱: {emailAddress}, mail: {mail}", "收件人信息", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    If emailAddress.Contains(mail) Then
-                        authorized = True
-                        Exit For
+                    Dim exchangeUser = recipient.AddressEntry?.GetExchangeUser()
+                    If exchangeUser IsNot Nothing Then
+                        Dim emailAddress As String = exchangeUser.PrimarySmtpAddress
+                        ' 显示当前收件人的邮箱和 mail
+                        'MessageBox.Show($"当前收件人邮箱: {emailAddress}, mail: {mail}", "收件人信息", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        If emailAddress.Contains(mail) Then
+                            authorized = True
+                            Exit For
+                        End If
                     End If
                 Next
 
