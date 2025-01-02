@@ -38,7 +38,7 @@ Partial Class progressBarForm
         Me.logLabel.AutoSize = True
         Me.logLabel.Location = New System.Drawing.Point(13, 76)
         Me.logLabel.Name = "logLabel"
-        Me.logLabel.Size = New System.Drawing.Size(37, 15)
+        Me.logLabel.Size = New System.Drawing.Size(565, 15)
         Me.logLabel.TabIndex = 1
         Me.logLabel.Text = "……"
         '

@@ -177,6 +177,7 @@ Partial Class SettingsForm
         Me.MinimizeBox = False
         Me.Name = "SettingsForm"
         Me.Text = "配置"
+        AddHandler Load, AddressOf Me.SettingsForm_Load_1
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)

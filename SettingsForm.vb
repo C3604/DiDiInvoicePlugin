@@ -137,4 +137,8 @@ Public Class SettingsForm
 
         File.WriteAllText(configFilePath, configContent.ToString())
     End Sub
+
+    Private Sub SettingsForm_Load_1(sender As Object, e As EventArgs)
+
+    End Sub
 End Class

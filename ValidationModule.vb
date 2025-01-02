@@ -8,22 +8,32 @@ Module ValidationModule
         Dim currentDate As DateTime = DateTime.Now
         Dim configDate As DateTime
         If DateTime.TryParse(data, configDate) AndAlso currentDate > configDate Then
-            Throw New InvalidOperationException("当前日期已超过配置的日期，程序终止。")
+            Throw New InvalidOperationException("当前日期已超过配置的日期")
         End If
 
-        ' 暂时取消检查收件人信息
-        ' ' 校验当前选中邮件收件人是否包含 mail
-        ' Dim outlookApp As New Microsoft.Office.Interop.Outlook.Application()
-        ' Dim explorer As Explorer = outlookApp.ActiveExplorer()
-        ' Dim selection As Selection = explorer.Selection
+        ' 获取当前选中的邮件
+        Dim outlookApp As New Microsoft.Office.Interop.Outlook.Application()
+        Dim explorer As Explorer = outlookApp.ActiveExplorer()
+        If explorer.Selection.Count > 0 Then
+            Dim selectedMail As MailItem = TryCast(explorer.Selection(1), MailItem)
+            If selectedMail IsNot Nothing Then
+                ' 判断收件人邮箱是否包含与 mail 相匹配的地址
+                Dim recipients As Recipients = selectedMail.Recipients
+                Dim authorized As Boolean = False
+                For Each recipient As Recipient In recipients
+                    Dim emailAddress As String = recipient.AddressEntry.GetExchangeUser().PrimarySmtpAddress
+                    ' 显示当前收件人的邮箱和 mail
+                    'MessageBox.Show($"当前收件人邮箱: {emailAddress}, mail: {mail}", "收件人信息", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    If emailAddress.Contains(mail) Then
+                        authorized = True
+                        Exit For
+                    End If
+                Next
 
-        ' If selection.Count = 0 Then
-        '     Throw New InvalidOperationException("未选中任何邮件。")
-        ' End If
-
-        ' Dim mailItem As MailItem = TryCast(selection.Item(1), MailItem)
-        ' If mailItem Is Nothing OrElse Not mailItem.To.Contains(mail) Then
-        '     Throw New InvalidOperationException("选中邮件的收件人不包含指定的邮箱地址，程序终止。")
-        ' End If
+                If Not authorized Then
+                    Throw New InvalidOperationException("非授权用户")
+                End If
+            End If
+        End If
     End Sub
 End Module
